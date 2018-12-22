@@ -2,10 +2,22 @@
 <v-content>
   <v-container fluid>
     <v-container grid-list-md class="space-top">
-      <v-layout row wrap flexbox>
+      <v-layout v-if="isHomePage == false" row wrap flexbox>
         <v-flex>
-          <h1 class="title-subject" v-if="isHomePage == false">{{getHeaderContent}}</h1>
+          <h1 class="title-subject" >{{getHeaderContent}}</h1>
           <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+          <v-data-table
+            :headers="headers"
+            :items="subjectFiles"
+            class="elevation-1"
+          >
+            <template slot="items" slot-scope="props">
+              <td class="text-xs-left">{{ props.index + 1 }}</td>
+              <td class="text-xs-left">{{ props.item.id }}</td>
+              <td class="text-xs-left">{{ props.item.fileName }}</td>
+              <td class="text-xs-left">{{ props.item.carbs }}</td>
+            </template>
+          </v-data-table>
         </v-flex>
       </v-layout>
       <v-layout row wrap align-end flexbox>
@@ -70,27 +82,41 @@ export default {
             subjectId: this.$route.params.subjectID
           },
           accept: (file, done)=> {
-            if (file.name == "justinbieber.jpg") {
-              done("Naha, you don't.");
-            }
-            else { done(); }
+            console.log('upload success dude!')
+            done();
           }
-      }
+      },
+      headers: [
+          {
+            text: 'File Assets',
+            align: 'left',
+            sortable: false,
+            value: 'name'
+          },
+          { text: '#', value: 'calories' },
+          { text: 'Materials', value: 'fat' },
+          { text: 'Last Update', value: 'carbs' }
+        ],
+        subjectFiles: []
     }
   },
   async mounted() {
     this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
     this.loadSubjectTitle()
     this.loadAllVideoCard()
-    let testFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files`)
-    console.log(testFiles.data)
-    console.log(this.$route.params.subjectID)
+    this.loadAllSubjectFiles()
   },
   computed: {
     ...mapGetters(['getHeaderContent'])
   },
   methods: {
     ...mapActions(['setHeaderContent']),
+    loadAllSubjectFiles: async function(){
+      let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files`)
+      subjectFiles = subjectFiles.data
+      this.subjectFiles = subjectFiles
+      console.log(subjectFiles)      
+    },
     loadSubjectTitle: function(){
       if(this.$route.path == '/'){
         this.isHomePage = true
