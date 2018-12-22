@@ -1,5 +1,5 @@
 applications:
-- name: elearning-frontend
+- name: elearning-frontend-son
   #random-route: true
   memory:  256M
   path: dist/
