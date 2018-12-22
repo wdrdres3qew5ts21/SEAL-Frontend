@@ -8,42 +8,10 @@
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
-
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </v-toolbar>
-    <v-data-table
-      :headers="headers"
-      :items="subjectFiles"
-      class="elevation-1"
-    >
+    <v-data-table :headers="headers" :items="subjectFiles" class="elevation-1">
       <template slot="items" slot-scope="props">
         <td class="text-xs-left">{{ props.index + 1 }}</td>
         <td class="text-xs-left">
@@ -79,20 +47,6 @@ export default {
     ],
     subjectFiles: [],
     editedIndex: -1,
-    editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
-    },
-    defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
-    }
   }),
   computed: {
     formTitle () {
@@ -122,16 +76,10 @@ export default {
       this.subjectFiles = subjectFiles
       console.log(subjectFiles)
     },
-    editItem (item) {
-      this.editedIndex = this.desserts.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
     deleteItem (item) {
       console.log('Delte Item : ')
       console.log(item)
       const index = this.subjectFiles.indexOf(item)
-      // confirm('Are you sure you want to delete this item?') && this.subjectFiles.splice(index, 1)
       this.$swal({
         title: "ต้องการจะลบไฟล์จริงๆใช่มั้ยยย ?",
         text: `ถ้าลบ ${item.fileName} ไปแล้วไฟล์จะหายไปเลยตลอดกาลนะ TwT !`,
@@ -152,21 +100,6 @@ export default {
         }
       })
     },
-    close () {
-      this.dialog = false
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      }, 300)
-    },
-    save () {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-      } else {
-        this.desserts.push(this.editedItem)
-      }
-      this.close()
-    }
   }
 }
 </script>
