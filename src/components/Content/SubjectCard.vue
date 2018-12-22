@@ -29,7 +29,7 @@
 
 <script>
 import axios from 'axios'
-import {mapActions, mapGetters} from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'SubjectCard',
   props: {
@@ -46,62 +46,62 @@ export default {
       favouriteId: 0
     }
   },
-  mounted(){
+  mounted () {
     this.checkSubjectIsFavourited()
   },
   methods: {
-    ...mapActions(['setHeaderContent','setFavorite']),
-    checkSubjectIsFavourited: function(){
+    ...mapActions(['setHeaderContent', 'setFavorite']),
+    checkSubjectIsFavourited: function () {
       // console.log('subject-card redered : '+this.subjectID)
       let subjectFavourites = this.getFavorite
       // console.log(subjectFavourites[0])
       // console.log('User Fave : '+ subjectFavourites[1])
-      for(let i = 0; i < subjectFavourites.length; i++){
-        if( subjectFavourites[i].subjectId == this.subjectID){
+      for (let i = 0; i < subjectFavourites.length; i++) {
+        if (subjectFavourites[i].subjectId == this.subjectID) {
           console.log(subjectFavourites[i].id)
           this.favouriteId = subjectFavourites[i].id
           this.isFavouriteByUser = true
-          //console.log('Favourited by User : ' + this.subjectID)
+          // console.log('Favourited by User : ' + this.subjectID)
         }
       }
     },
-    loveFavorite: async function(subjectID){
+    loveFavorite: async function (subjectID) {
       console.log('love')
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
-      let love = await axios.post(process.env.VUE_APP_USER_SERVICE_URL + '/favorite/user/'+this.getUser.userId+'/subject',
+      let love = await axios.post(process.env.VUE_APP_USER_SERVICE_URL + '/favorite/user/' + this.getUser.userId + '/subject',
         {
-          "subjectId": subjectID
-        },{
-          headers:{
+          'subjectId': subjectID
+        }, {
+          headers: {
             'Authorization': `Bearer ${jwtTokenLocalStorage}`
           }
         }
       )
-      .catch((response)=>{
-        localStorage.removeItem('jwtToken')
-        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error');
-        this.$router.push('/login')
-      })
+        .catch((response) => {
+          localStorage.removeItem('jwtToken')
+          this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
+          this.$router.push('/login')
+        })
     },
-    disloveFavorite: async function(favouriteId){
+    disloveFavorite: async function (favouriteId) {
       this.isFavouriteByUser = false
       console.log('dislove')
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
-      let dislove = await axios.delete(process.env.VUE_APP_USER_SERVICE_URL + '/favorite/'+this.getUser.userId+'/'+favouriteId,
-      {
-        headers:{
+      let dislove = await axios.delete(process.env.VUE_APP_USER_SERVICE_URL + '/favorite/' + this.getUser.userId + '/' + favouriteId,
+        {
+          headers: {
             'Authorization': `Bearer ${jwtTokenLocalStorage}`
           }
-      })
-      .catch((response)=>{
-        localStorage.removeItem('jwtToken')
-        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error');
-        this.$router.push('/login')
-      })
+        })
+        .catch((response) => {
+          localStorage.removeItem('jwtToken')
+          this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
+          this.$router.push('/login')
+        })
     }
   },
   computed: {
-    ...mapGetters(['getUser','getFavorite'])
+    ...mapGetters(['getUser', 'getFavorite'])
   }
 }
 </script>

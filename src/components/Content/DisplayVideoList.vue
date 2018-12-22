@@ -6,7 +6,7 @@
         <v-flex>
           <h1 class="title-subject" >{{getHeaderContent}}</h1>
           <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
-          <v-data-table
+          <!-- <v-data-table
             :headers="headers"
             :items="subjectFiles"
             class="elevation-1"
@@ -17,7 +17,8 @@
               <td class="text-xs-left">{{ props.item.fileName }}</td>
               <td class="text-xs-left">{{ props.item.carbs }}</td>
             </template>
-          </v-data-table>
+          </v-data-table> -->
+          <subject-file-table :subjectID="parseInt($route.params.subjectID)"/>
         </v-flex>
       </v-layout>
       <v-layout row wrap align-end flexbox>
@@ -54,14 +55,16 @@
 <script>
 import vue2Dropzone from 'vue2-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+import SubjectFileTable from './SubjectFileTable'
 import VideoCard from './VideoCard'
 import axios from 'axios'
-import {mapGetters, mapActions} from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DisplayVideoList',
   components: {
     VideoCard,
+    SubjectFileTable,
     vueDropzone: vue2Dropzone
   },
   data () {
@@ -69,38 +72,38 @@ export default {
       dialog: true,
       isShowMenu: false,
       videoDetails: [],
-      videoUrlSample:'https://ngelearning.sit.kmutt.ac.th/api/v0/subject/2/videos',
+      videoUrlSample: 'https://ngelearning.sit.kmutt.ac.th/api/v0/subject/2/videos',
       subjectID: 2,
       isHomePage: false,
       dropzoneOptions: {
-          url: `${process.env.VUE_APP_FILE_SERVICE_URL}/upload`,
-          method: 'post',
-          thumbnailWidth: 150,
-          maxFilesize: 30,
-          timeout: 60000,
-          params: {
-            subjectId: this.$route.params.subjectID
-          },
-          accept: (file, done)=> {
-            console.log('upload success dude!')
-            done();
-          }
+        url: `${process.env.VUE_APP_FILE_SERVICE_URL}/upload`,
+        method: 'post',
+        thumbnailWidth: 150,
+        maxFilesize: 30,
+        timeout: 60000,
+        params: {
+          subjectId: this.$route.params.subjectID
+        },
+        accept: (file, done) => {
+          console.log('upload success dude!')
+          done()
+        }
       },
       headers: [
-          {
-            text: 'File Assets',
-            align: 'left',
-            sortable: false,
-            value: 'name'
-          },
-          { text: '#', value: 'calories' },
-          { text: 'Materials', value: 'fat' },
-          { text: 'Last Update', value: 'carbs' }
-        ],
-        subjectFiles: []
+        {
+          text: 'File Assets',
+          align: 'left',
+          sortable: false,
+          value: 'name'
+        },
+        { text: '#', value: 'calories' },
+        { text: 'Materials', value: 'fat' },
+        { text: 'Last Update', value: 'carbs' }
+      ],
+      subjectFiles: []
     }
   },
-  async mounted() {
+  async mounted () {
     this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
     this.loadSubjectTitle()
     this.loadAllVideoCard()
@@ -111,17 +114,16 @@ export default {
   },
   methods: {
     ...mapActions(['setHeaderContent']),
-    loadAllSubjectFiles: async function(){
+    loadAllSubjectFiles: async function () {
       let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files`)
       subjectFiles = subjectFiles.data
       this.subjectFiles = subjectFiles
-      console.log(subjectFiles)      
+      console.log(subjectFiles)
     },
-    loadSubjectTitle: function(){
-      if(this.$route.path == '/'){
+    loadSubjectTitle: function () {
+      if (this.$route.path == '/') {
         this.isHomePage = true
-      }
-      else{
+      } else {
         console.log(this.$route.query.subjectName)
         this.setHeaderContent(this.$route.query.subjectName)
       }
@@ -137,9 +139,9 @@ export default {
             Authorization: `Bearer ${jwtTokenLocalStorage}`
           }
         }
-      ).catch((response)=>{
+      ).catch((response) => {
         localStorage.removeItem('jwtToken')
-        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error');
+        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
         this.$router.push('/login')
       })
       videoDetails = videoDetails.data

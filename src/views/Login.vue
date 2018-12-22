@@ -59,7 +59,7 @@ export default {
     this.verifyIsLoginByJwtYet()
   },
   methods: {
-    ...mapActions(['setJwtToken', 'setUser','setIsShowToolBar']),
+    ...mapActions(['setJwtToken', 'setUser', 'setIsShowToolBar']),
     verifyIsLoginByJwtYet: function () {
       let jwtToken = localStorage.getItem('jwtToken')
       if (jwtToken != null) {
@@ -74,8 +74,8 @@ export default {
           id,
           password
         }
-      ).catch((error)=>{
-          this.$swal('กรุณา login ใหม่', error.response.data.message , 'error');
+      ).catch((error) => {
+        this.$swal('กรุณา login ใหม่', error.response.data.message, 'error')
       })
       userAuthentication = userAuthentication.data
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
@@ -89,11 +89,11 @@ export default {
         this.$router.push('/')
       }
     },
-    logout: function (){
+    logout: function () {
       localStorage.removeItem('jwtToken')
       this.alreadyLogin = false
     },
-    verifyJWT: async function(){
+    verifyJWT: async function () {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       let verifyData = await axios.get(
         `${process.env.VUE_APP_USER_SERVICE_URL}/users`,
@@ -133,4 +133,3 @@ export default {
     width: 80%;
   }
 </style>
-

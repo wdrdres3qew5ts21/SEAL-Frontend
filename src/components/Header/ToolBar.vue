@@ -61,7 +61,7 @@
         </v-list>
         <v-subheader class="mt-1 grey--text text--darken-1">Curriculums</v-subheader>
         <v-list dense>
-          <v-list-tile v-for="item in faculties" :key="item.program_id" 
+          <v-list-tile v-for="item in faculties" :key="item.program_id"
               @click="pageFaculty(item.program_id); setHeaderContent(item.program_name)">
             <v-list-tile-action>
               <v-icon>layers</v-icon>
@@ -102,13 +102,13 @@ export default {
   },
   mounted () {
     this.loadUserDetail()
-    if(localStorage.getItem('jwtToken') != null){
+    if (localStorage.getItem('jwtToken') != null) {
       this.loadAllFavorite()
       this.loadAllFaculties()
     }
   },
   computed: {
-    ...mapGetters(['getUser','getFavorite'])
+    ...mapGetters(['getUser', 'getFavorite'])
   },
   data () {
     return {
@@ -124,7 +124,7 @@ export default {
         { title: 'All Videos', icon: 'videocam', page: '/' },
         { title: 'Subject', icon: 'school', page: '/' }
       ],
-      favoriteSubject:[]
+      favoriteSubject: []
     }
   },
   methods: {
@@ -147,15 +147,15 @@ export default {
             'Authorization': `Bearer ${jwtTokenLocalStorage}`
           }
         }
-      ).catch((response)=>{
+      ).catch((response) => {
         localStorage.removeItem('jwtToken')
-        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error');
+        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
         this.$router.push('/login')
       })
       faculties = faculties.data
       this.faculties = faculties
     },
-    loadAllFavorite: async function(){
+    loadAllFavorite: async function () {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       let favoriteDetail = await axios.get(
         `${process.env.VUE_APP_USER_SERVICE_URL}/favorites/user/${this.getUser.userId}`,
@@ -163,26 +163,26 @@ export default {
           headers: {
             'Authorization': `Bearer ${jwtTokenLocalStorage}`
           }
-        }).catch((response)=>{
-          localStorage.removeItem('jwtToken')
-          this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error');
-          this.$router.push('/login')
-        })
-        let favorites = favoriteDetail.data
-        this.setFavorite(favorites)
-        for (let i = 0; i < favorites.length; i++) {
-          this.findSubjectNameById(parseInt(favorites[i].subjectId))
-        }
+        }).catch((response) => {
+        localStorage.removeItem('jwtToken')
+        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
+        this.$router.push('/login')
+      })
+      let favorites = favoriteDetail.data
+      this.setFavorite(favorites)
+      for (let i = 0; i < favorites.length; i++) {
+        this.findSubjectNameById(parseInt(favorites[i].subjectId))
+      }
     },
-    findSubjectNameById: async function(subjectId){
+    findSubjectNameById: async function (subjectId) {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       let subject = await axios.get(
-          `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/subject/${subjectId}`,{
-            headers: {
-              'Authorization': `Bearer ${jwtTokenLocalStorage}`
-            }
-          })
-          this.favoriteSubject.push(subject.data.subject_name)
+        `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/subject/${subjectId}`, {
+          headers: {
+            'Authorization': `Bearer ${jwtTokenLocalStorage}`
+          }
+        })
+      this.favoriteSubject.push(subject.data.subject_name)
     },
     page (page) {
       this.$router.replace({ path: page })
@@ -191,10 +191,10 @@ export default {
       this.$router.replace({ path: '/faculty/' + program_id })
       this.setFacultyID(program_id)
     },
-    searchByCondition: function (facultyID){
-      if(facultyID === 0){
-        this.searchAllSubjects (this.searchKeyword)
-      }else {
+    searchByCondition: function (facultyID) {
+      if (facultyID === 0) {
+        this.searchAllSubjects(this.searchKeyword)
+      } else {
         this.searchSubjectByFacultyID(this.searchKeyword)
       }
     },
@@ -202,9 +202,9 @@ export default {
       this.$router.replace({ path: '/faculty/' + this.getFacultyID() + '/' + searchKeyword })
       this.setKeyword(searchKeyword)
       this.dialog = false
-    }, 
+    },
     searchAllSubjects (searchKeyword) {
-      this.$router.replace({ path: '/subject/'+ searchKeyword})
+      this.$router.replace({ path: '/subject/' + searchKeyword })
       this.setKeyword(searchKeyword)
       this.dialog = false
     }
