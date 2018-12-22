@@ -71,7 +71,14 @@ export default {
       return fileTimeStamp.toGMTString()
     },
     loadAllSubjectFiles: async function () {
-      let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files/subject/${this.subjectID}`)
+      console.log('load all subject files')
+      let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files/subject/${this.subjectID}`,
+        {
+          headers: {
+            'Authorization': localStorage.getItem('jwtToken') 
+          }
+        }
+      )
       subjectFiles = subjectFiles.data
       this.subjectFiles = subjectFiles
       console.log(subjectFiles)
@@ -91,7 +98,11 @@ export default {
       })
       .then((result) => {
         if (result.value) {
-          axios.delete(`${process.env.VUE_APP_FILE_SERVICE_URL}/delete/${item.id}`)
+          axios.delete(`${process.env.VUE_APP_FILE_SERVICE_URL}/delete/${item.id}`,{
+            headers: {
+              Authorization: localStorage.getItem('jwtToken')
+            }
+          })
           this.subjectFiles.splice(index, 1)
           this.$swal(
             'ทำการลบไฟล์!',

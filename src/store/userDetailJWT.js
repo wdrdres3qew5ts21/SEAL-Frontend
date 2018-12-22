@@ -24,7 +24,7 @@ export const userDetailJWT = {
         facultyID: 1,
         programName: user.faculty,
         programCode: user.faculty,
-        role: 'ROLE_USER'
+        role: user.role
       }
       commit('setUser', temptUser)
     },

@@ -5,8 +5,11 @@
       <v-layout v-if="isHomePage == false" row wrap flexbox>
         <v-flex>
           <h1 class="title-subject" >{{getHeaderContent}}</h1>
-          <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
-          <subject-file-table :subjectID="parseInt($route.params.subjectID)"/>
+          <div v-if="getUser.role =='teacher' ">
+            <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" 
+              @vdropzone-success="(file, response)=>reloadSubjectFileTable(file, response)"/>
+            <subject-file-table :subjectID="parseInt($route.params.subjectID)" ref="subjectFileTable"/>
+          </div>
         </v-flex>
       </v-layout>
       <v-layout row wrap align-end flexbox>
@@ -69,26 +72,29 @@ export default {
         thumbnailWidth: 150,
         maxFilesize: 30,
         timeout: 60000,
+        headers: {
+          Authorization: localStorage.getItem('jwtToken')
+        },
         params: {
           subjectId: parseInt(this.$route.params.subjectID)
-        },
-        accept: (file, done) => {
-          console.log('upload success dude!')
-          done()
         }
       },
     }
   },
-  async mounted () {
+  mounted () {
     this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
     this.loadSubjectTitle()
     this.loadAllVideoCard()
+    console.log(this.getUser)
   },
   computed: {
-    ...mapGetters(['getHeaderContent'])
+    ...mapGetters(['getHeaderContent', 'getUser'])
   },
   methods: {
     ...mapActions(['setHeaderContent']),
+    reloadSubjectFileTable: function(file, response){
+      this.$refs.subjectFileTable.loadAllSubjectFiles()
+    },
     loadSubjectTitle: function () {
       if (this.$route.path == '/') {
         this.isHomePage = true
