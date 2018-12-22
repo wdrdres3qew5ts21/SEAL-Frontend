@@ -6,18 +6,6 @@
         <v-flex>
           <h1 class="title-subject" >{{getHeaderContent}}</h1>
           <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
-          <!-- <v-data-table
-            :headers="headers"
-            :items="subjectFiles"
-            class="elevation-1"
-          >
-            <template slot="items" slot-scope="props">
-              <td class="text-xs-left">{{ props.index + 1 }}</td>
-              <td class="text-xs-left">{{ props.item.id }}</td>
-              <td class="text-xs-left">{{ props.item.fileName }}</td>
-              <td class="text-xs-left">{{ props.item.carbs }}</td>
-            </template>
-          </v-data-table> -->
           <subject-file-table :subjectID="parseInt($route.params.subjectID)"/>
         </v-flex>
       </v-layout>
@@ -82,44 +70,25 @@ export default {
         maxFilesize: 30,
         timeout: 60000,
         params: {
-          subjectId: this.$route.params.subjectID
+          subjectId: parseInt(this.$route.params.subjectID)
         },
         accept: (file, done) => {
           console.log('upload success dude!')
           done()
         }
       },
-      headers: [
-        {
-          text: 'File Assets',
-          align: 'left',
-          sortable: false,
-          value: 'name'
-        },
-        { text: '#', value: 'calories' },
-        { text: 'Materials', value: 'fat' },
-        { text: 'Last Update', value: 'carbs' }
-      ],
-      subjectFiles: []
     }
   },
   async mounted () {
     this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
     this.loadSubjectTitle()
     this.loadAllVideoCard()
-    this.loadAllSubjectFiles()
   },
   computed: {
     ...mapGetters(['getHeaderContent'])
   },
   methods: {
     ...mapActions(['setHeaderContent']),
-    loadAllSubjectFiles: async function () {
-      let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files`)
-      subjectFiles = subjectFiles.data
-      this.subjectFiles = subjectFiles
-      console.log(subjectFiles)
-    },
     loadSubjectTitle: function () {
       if (this.$route.path == '/') {
         this.isHomePage = true

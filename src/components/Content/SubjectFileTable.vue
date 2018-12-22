@@ -91,6 +91,7 @@ export default {
       })
       .then((result) => {
         if (result.value) {
+          axios.delete(`${process.env.VUE_APP_FILE_SERVICE_URL}/delete/${item.id}`)
           this.subjectFiles.splice(index, 1)
           this.$swal(
             'ทำการลบไฟล์!',
