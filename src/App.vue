@@ -8,20 +8,30 @@
   </v-app>
 </template>
 <script>
+import vue2Dropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import axios from "axios";
 import ToolBar from "./components/Header/ToolBar";
 import { mapGetters } from "vuex";
 export default {
   name: "App",
   components: {
-    ToolBar
+    ToolBar,
+    vue2Dropzone
   },
   mounted() {
     console.log(process.env.VUE_APP_TEST);
     console.log(process.env.lnwza);
   },
   data() {
-    return {};
+    return {
+      dropzoneOptions: {
+          url: 'https://httpbin.org/post',
+          thumbnailWidth: 150,
+          maxFilesize: 0.5,
+          headers: { "My-Awesome-Header": "header value" }
+      } 
+    };
   },
   methods: {
     loadToolBar: function() {

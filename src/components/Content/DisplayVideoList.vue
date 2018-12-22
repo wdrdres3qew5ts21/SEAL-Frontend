@@ -4,7 +4,8 @@
     <v-container grid-list-md class="space-top">
       <v-layout row wrap flexbox>
         <v-flex>
-          <h2 class="title-subject" v-if="isHomePage == false">{{getHeaderContent}}</h2>
+          <h1 class="title-subject" v-if="isHomePage == false">{{getHeaderContent}}</h1>
+          <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
         </v-flex>
       </v-layout>
       <v-layout row wrap align-end flexbox>
@@ -39,6 +40,8 @@
 </v-content>
 </template>
 <script>
+import vue2Dropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import VideoCard from './VideoCard'
 import axios from 'axios'
 import {mapGetters, mapActions} from 'vuex'
@@ -46,7 +49,8 @@ import {mapGetters, mapActions} from 'vuex'
 export default {
   name: 'DisplayVideoList',
   components: {
-    VideoCard
+    VideoCard,
+    vueDropzone: vue2Dropzone
   },
   data () {
     return {
@@ -55,13 +59,32 @@ export default {
       videoDetails: [],
       videoUrlSample:'https://ngelearning.sit.kmutt.ac.th/api/v0/subject/2/videos',
       subjectID: 2,
-      isHomePage: false
+      isHomePage: false,
+      dropzoneOptions: {
+          url: `${process.env.VUE_APP_FILE_SERVICE_URL}/upload`,
+          method: 'post',
+          thumbnailWidth: 150,
+          maxFilesize: 30,
+          timeout: 60000,
+          params: {
+            subjectId: this.$route.params.subjectID
+          },
+          accept: (file, done)=> {
+            if (file.name == "justinbieber.jpg") {
+              done("Naha, you don't.");
+            }
+            else { done(); }
+          }
+      }
     }
   },
-  mounted () {
+  async mounted() {
     this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
     this.loadSubjectTitle()
     this.loadAllVideoCard()
+    let testFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files`)
+    console.log(testFiles.data)
+    console.log(this.$route.params.subjectID)
   },
   computed: {
     ...mapGetters(['getHeaderContent'])
