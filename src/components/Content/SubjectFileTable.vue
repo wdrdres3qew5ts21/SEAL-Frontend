@@ -52,21 +52,9 @@
         <td class="text-xs-left">
           {{ convertFileNameToDate(props.item.fileName) }}
         </td>
-        <!-- <td class="justify-center layout px-0">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            small
-            @click="deleteItem(props.item)"
-          >
-            delete
-          </v-icon>
-        </td> -->
+        <td class="text-xs-left layout px-0">
+          <v-icon small @click="deleteItem(props.item)">delete</v-icon>
+        </td>
       </template>
       <template slot="no-data">
         <v-btn color="primary" @click="loadAllSubjectFiles">Reset</v-btn>
@@ -111,7 +99,6 @@ export default {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
     }
   },
-
   watch: {
     dialog (val) {
       val || this.close()
@@ -127,7 +114,7 @@ export default {
     convertFileNameToDate: function(fileName){
       let fileTimeStamp = parseInt(fileName.substr(0,fileName.lastIndexOf("-"))) 
       fileTimeStamp = new Date(fileTimeStamp)
-      return fileTimeStamp.toDateString()
+      return fileTimeStamp.toGMTString()
     },
     loadAllSubjectFiles: async function () {
       let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files/subject/${this.subjectID}`)
@@ -140,12 +127,31 @@ export default {
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
-
     deleteItem (item) {
-      const index = this.desserts.indexOf(item)
-      confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      console.log('Delte Item : ')
+      console.log(item)
+      const index = this.subjectFiles.indexOf(item)
+      // confirm('Are you sure you want to delete this item?') && this.subjectFiles.splice(index, 1)
+      this.$swal({
+        title: "ต้องการจะลบไฟล์จริงๆใช่มั้ยยย ?",
+        text: `ถ้าลบ ${item.fileName} ไปแล้วไฟล์จะหายไปเลยตลอดกาลนะ TwT !`,
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes Delete it ! ノ ゜Д゜)ノ ︵ ┻━┻ '
+      })
+      .then((result) => {
+        if (result.value) {
+          this.subjectFiles.splice(index, 1)
+          this.$swal(
+            'ทำการลบไฟล์!',
+            'ลบไฟล์สำเร็จแล้ว',
+            'success'
+          )
+        }
+      })
     },
-
     close () {
       this.dialog = false
       setTimeout(() => {
@@ -153,7 +159,6 @@ export default {
         this.editedIndex = -1
       }, 300)
     },
-
     save () {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem)
