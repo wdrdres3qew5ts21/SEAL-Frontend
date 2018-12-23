@@ -103,6 +103,12 @@ export default {
     },
     reloadSubjectFileTable: function(file, response){
       this.$refs.subjectFileTable.loadAllSubjectFiles()
+      axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/subject/${this.subjectID}/updatefile`,null,
+      {
+        headers: {
+          Authorization: localStorage.getItem('jwtToken')
+        },
+      })
     },
     loadSubjectTitle: async function () {
       if (this.$route.path == '/') {
