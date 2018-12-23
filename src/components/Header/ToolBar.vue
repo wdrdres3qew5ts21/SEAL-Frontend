@@ -108,7 +108,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getFavorite', 'getFavoriteSubject'])
+    ...mapGetters(['getUser', 'getFavorite', 'getFavorite'])
   },
   data () {
     return {
@@ -128,7 +128,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setFacultyID', 'setKeyword', 'setUser', 'setHeaderContent', 'setFavorite', 'addFavoriteSubject']),
+    ...mapActions(['setFacultyID', 'setKeyword', 'setUser', 'setHeaderContent', 'setFavorite', 'addFavoriteSubjectName']),
     ...mapGetters(['getFacultyID']),
     loadUserDetail: function () {
       let jwtToken = localStorage.getItem('jwtToken')
@@ -171,10 +171,32 @@ export default {
       let favorites = favoriteDetail.data
       console.log(favorites)
       this.setFavorite(favorites)
-      for (let i = 0; i < favorites.length; i++) {
-        this.findSubjectNameById(parseInt(favorites[i].subjectId))
-      }
+      // // ตอนแรกเราใช้วิธีวนหาจากตัวที่อยู่ใน Vuex เฉยๆซึ่งมันไม่ดีเพราะโค้ดแยกกัน
+      // for (let i = 0; i < favorites.length; i++) {
+      //   this.findSubjectNameById(parseInt(favorites[i].subjectId))
+      // }
+      // แก้มาเป้นการหาแล้วบันทึกลงที่เดียวเลยดีกว่า
+      // for (let i = 0; i < favorites.length; i++) {
+      //   this.fetchFavoriteDetail(favorites[i])
+      // }
+      
     },
+    fetchFavoriteDetail: async function (favorite) {
+      console.log('185')
+      let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
+      let subject = await axios.get(
+        `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/subject/${favorite.subjectId}`, {
+          headers: {
+            'Authorization': `Bearer ${jwtTokenLocalStorage}`
+          }
+        })
+      // Vuex แบบ FavoriteSubject
+      this.addFavoriteSubjectName({
+        ...favorite,
+        subjectName: subject.data.subject_name
+      })
+    },
+
     findSubjectNameById: async function (subjectId) {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       let subject = await axios.get(
@@ -183,12 +205,14 @@ export default {
             'Authorization': `Bearer ${jwtTokenLocalStorage}`
           }
         })
-        //push ลง array ของเราเองเพื่อเก้บไว้แสดงที่ด้านขวา
+        //push ลง array ของเราเองเพื่อเก้บไว้แสดงที่ด้านขวา ไมไ่ด้ใช้ Vuex
       this.favoriteSubject.push(subject.data.subject_name)
-      this.addFavoriteSubject({
-        subjectId: subjectId,
-        subjectName: subject.data.subject_name
-      })
+      // // Vuex แบบ FavoriteSubject
+      // this.getFavorite
+      // this.addFavoriteSubject({
+      //   subjectId: subjectId.toString(),
+      //   subjectName: subject.data.subject_name
+      // })
     },
     page (page) {
       this.$router.replace({ path: page })

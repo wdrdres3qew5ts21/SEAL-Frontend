@@ -1,23 +1,41 @@
+import axios from 'axios'
 export const favouritePreference = {
   state: {
-    favoriteSubject: []
+    favorite: []
   },
   actions: {
-    addFavoriteSubject: function ({ commit }, favoriteSubject) {
+    setFavorite: function ({ commit }, favorite) {
+      commit('setFavorite', favorite)
+    },
+    addFavoriteSubjectName: function ({ commit }, favorite) {
       console.log('add push vuex')
-      commit('addFavoriteSubject', favoriteSubject)
+      commit('addFavoriteSubjectName', favorite)
     }
   },
   mutations: {
-    addFavoriteSubject: function (state, favoriteSubject) {
-      state.favoriteSubject.push({
-        ...favoriteSubject
+    setFavorite: async function (state, favorites) {
+      console.log('vuex set favorite and get subject name')
+      let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
+      for (let i = 0; i < favorites.length; i++) {
+        let subject = await axios.get(
+          `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/subject/${favorites[i].subjectId}`, {
+            headers: {
+              'Authorization': `Bearer ${jwtTokenLocalStorage}`
+            }
+          })
+        favorites[i].subjectName = subject.data.subject_name
+      }
+      state.favorite = favorites
+    },
+    addFavoriteSubjectName: function (state, favorite) {
+      state.favorite.push({
+        ...favorite
       })
     }
   },
   getters: {
-    getFavoriteSubject: function (state) {
-      return state.favoriteSubject
+    getFavorite: function (state) {
+      return state.favorite
     }
   }
 }
