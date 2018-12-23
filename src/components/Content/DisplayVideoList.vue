@@ -78,7 +78,8 @@ export default {
         params: {
           subjectId: parseInt(this.$route.params.subjectID)
         },
-        favoriteId: null
+        dictDefaultMessage: "<img src='https://png.pngtree.com/svg/20170414/file_upload_8845.png' style='width: 10%' />"+
+                            "<h3>( ͡° ͜ʖ ͡°) Upload File Here Drag & Drop</h3>"
       }
     }
   },
@@ -179,7 +180,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped> 
   .v-content {
     padding-top: 0px !important;
   }
