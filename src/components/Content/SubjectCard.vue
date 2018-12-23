@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setHeaderContent', 'setFavorite']),
+    ...mapActions(['setHeaderContent', 'setFavorite', 'modifyFavorite']),
     checkSubjectIsFavourited: function () {
       // console.log('subject-card redered : '+this.subjectID)
       let subjectFavourites = this.getFavorite
@@ -92,6 +92,7 @@ export default {
           this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
           this.$router.push('/login')
         })
+        this.reloadFavoriteToolBar();
     },
     disloveFavorite: async function (favouriteId) {
       this.isFavouriteByUser = false
@@ -108,6 +109,24 @@ export default {
           this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
           this.$router.push('/login')
         })
+        this.reloadFavoriteToolBar();
+    },
+    reloadFavoriteToolBar: async function(){
+      let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
+        let favoriteDetail = await axios.get(
+          `${process.env.VUE_APP_USER_SERVICE_URL}/favorites/user/${this.getUser.userId}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${jwtTokenLocalStorage}`
+            }
+          }).catch((response) => {
+          localStorage.removeItem('jwtToken')
+          this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
+          this.$router.push('/login')
+        })
+        let favorites = favoriteDetail.data
+        console.log(favorites)
+        this.setFavorite(favorites)
     }
   }
 }

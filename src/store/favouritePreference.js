@@ -23,6 +23,7 @@ export const favouritePreference = {
       state.favorites = favorite
     },
     setFavorite: async function (state, favorites) {
+      state.totalNotification = 0
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       for (let i = 0; i < favorites.length; i++) {
         let subject = await axios.get(
