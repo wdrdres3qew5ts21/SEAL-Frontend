@@ -97,6 +97,7 @@ export default {
   methods: {
     ...mapActions(['setHeaderContent', 'modifyFavorite', 'deductNotification']),
     fetchAllVideoDetailForThisSubject: function () {
+      this.dialog = true
       // ถ้าเกิดไม่กรอก subjectID ของหน้าวิชามาก็จะเตะไปวิชาที่ตั้งไว้คือ IT fund มี subjectID คือ 2
       this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
       this.loadSubjectTitle()
