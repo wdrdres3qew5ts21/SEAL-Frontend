@@ -1,7 +1,8 @@
 import axios from 'axios'
 export const favouritePreference = {
   state: {
-    favorite: []
+    favorite: [],
+    totalNotification: 0
   },
   actions: {
     setFavorite: function ({ commit }, favorite) {
@@ -9,6 +10,9 @@ export const favouritePreference = {
     },
     addFavoriteSubjectName: function ({ commit }, favorite) {
       commit('addFavoriteSubjectName', favorite)
+    },
+    deductNotification: function ({ commit }) {
+      commit('deductNotification')
     }
   },
   mutations: {
@@ -22,6 +26,9 @@ export const favouritePreference = {
             }
           })
         favorites[i].subjectName = subject.data.subject_name
+        if (favorites[i].isSomeThingUpdate === true) {
+          state.totalNotification++
+        }
       }
       state.favorite = favorites
     },
@@ -29,11 +36,17 @@ export const favouritePreference = {
       state.favorite.push({
         ...favorite
       })
+    },
+    deductNotification: function (state) {
+      state.totalNotification--
     }
   },
   getters: {
     getFavorite: function (state) {
       return state.favorite
+    },
+    getTotalNotification: function (state) {
+      return state.totalNotification
     }
   }
 }

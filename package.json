@@ -21,6 +21,7 @@
     "serve": "^10.0.2",
     "vue": "^2.5.17",
     "vue-dplayer": "^0.0.10",
+    "vue-notification-bell": "^0.8.11",
     "vue-router": "^3.0.1",
     "vue-sweetalert2": "^1.5.9",
     "vue-xgplayer": "^0.4.2",

@@ -6,7 +6,7 @@
         <v-flex>
           <h1 class="title-subject" >{{getHeaderContent}}</h1>
           <div v-if="getUser.role =='teacher' ">
-            <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" 
+            <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
               @vdropzone-success="(file, response)=>reloadSubjectFileTable(file, response)"/>
             <subject-file-table :subjectID="parseInt(this.$route.params.subjectID)" ref="subjectFileTable"/>
           </div>
@@ -79,7 +79,7 @@ export default {
           subjectId: parseInt(this.$route.params.subjectID)
         },
         favoriteId: null
-      },
+      }
     }
   },
   watch: {
@@ -91,24 +91,24 @@ export default {
     this.fetchAllVideoDetailForThisSubject()
   },
   computed: {
-    ...mapGetters(['getHeaderContent', 'getUser','getFavorite', 'getFavoriteBySubjectId'])
+    ...mapGetters(['getHeaderContent', 'getUser', 'getFavorite', 'getFavoriteBySubjectId'])
   },
   methods: {
     ...mapActions(['setHeaderContent']),
-    fetchAllVideoDetailForThisSubject: function(){
+    fetchAllVideoDetailForThisSubject: function () {
       // ถ้าเกิดไม่กรอก subjectID ของหน้าวิชามาก็จะเตะไปวิชาที่ตั้งไว้คือ IT fund มี subjectID คือ 2
       this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
       this.loadSubjectTitle()
       this.loadAllVideoCard()
     },
-    reloadSubjectFileTable: function(file, response){
+    reloadSubjectFileTable: function (file, response) {
       this.$refs.subjectFileTable.loadAllSubjectFiles()
-      axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/subject/${this.subjectID}/updatefile`,null,
-      {
-        headers: {
-          Authorization: localStorage.getItem('jwtToken')
-        },
-      })
+      axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/subject/${this.subjectID}/updatefile`, null,
+        {
+          headers: {
+            Authorization: localStorage.getItem('jwtToken')
+          }
+        })
     },
     loadSubjectTitle: async function () {
       if (this.$route.path == '/') {
@@ -122,25 +122,25 @@ export default {
         console.log(this.getFavorite)
         let subjectIdOfPage = this.$route.params.subjectID
         let favoriteLists = this.getFavorite
-        let myFavoriteId = null;
+        let myFavoriteId = null
         for (let i = 0; i < favoriteLists.length; i++) {
           if (favoriteLists[i].subjectId === subjectIdOfPage) {
             myFavoriteId = favoriteLists[i].id
             break
           }
         }
-        if(myFavoriteId != null){
-          //console.log('You had favourite this subject : '+ myFavoriteId)
-          axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/user/${this.getUser.userId}/read/notification`,{
+        if (myFavoriteId != null) {
+          // console.log('You had favourite this subject : '+ myFavoriteId)
+          axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/user/${this.getUser.userId}/read/notification`, {
             id: myFavoriteId
-          },{
+          }, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
             }
           })
         }
       }
-      //console.log(this.$route.path)
+      // console.log(this.$route.path)
     },
     loadAllVideoCard: async function () {
       console.log('load all video card')

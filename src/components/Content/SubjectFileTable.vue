@@ -46,7 +46,7 @@ export default {
       { text: 'Last Update', value: 'Last Update' }
     ],
     subjectFiles: [],
-    editedIndex: -1,
+    editedIndex: -1
   }),
   computed: {
     formTitle () {
@@ -54,10 +54,10 @@ export default {
     }
   },
   watch: {
-    dialog: function(val) {
+    dialog: function (val) {
       val || this.close()
     },
-    subjectID: function(){
+    subjectID: function () {
       this.loadAllSubjectFiles()
     }
   },
@@ -65,11 +65,11 @@ export default {
     this.loadAllSubjectFiles()
   },
   methods: {
-    convertToFileName: function(fileName){
-      return fileName.substr(fileName.indexOf("-")+1)
+    convertToFileName: function (fileName) {
+      return fileName.substr(fileName.indexOf('-') + 1)
     },
-    convertFileNameToDate: function(fileName){
-      let fileTimeStamp = parseInt(fileName.substr(0,fileName.lastIndexOf("-"))) 
+    convertFileNameToDate: function (fileName) {
+      let fileTimeStamp = parseInt(fileName.substr(0, fileName.lastIndexOf('-')))
       fileTimeStamp = new Date(fileTimeStamp)
       return fileTimeStamp.toGMTString()
     },
@@ -77,7 +77,7 @@ export default {
       let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files/subject/${this.subjectID}`,
         {
           headers: {
-            'Authorization': localStorage.getItem('jwtToken') 
+            'Authorization': localStorage.getItem('jwtToken')
           }
         }
       )
@@ -89,7 +89,7 @@ export default {
       console.log(item)
       const index = this.subjectFiles.indexOf(item)
       this.$swal({
-        title: "ต้องการจะลบไฟล์จริงๆใช่มั้ยยย ?",
+        title: 'ต้องการจะลบไฟล์จริงๆใช่มั้ยยย ?',
         text: `ถ้าลบ ${item.fileName} ไปแล้วไฟล์จะหายไปเลยตลอดกาลนะ TwT !`,
         type: 'warning',
         showCancelButton: true,
@@ -97,22 +97,22 @@ export default {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes Delete it ! ノ ゜Д゜)ノ ︵ ┻━┻ '
       })
-      .then((result) => {
-        if (result.value) {
-          axios.delete(`${process.env.VUE_APP_FILE_SERVICE_URL}/delete/${item.id}`,{
-            headers: {
-              Authorization: localStorage.getItem('jwtToken')
-            }
-          })
-          this.subjectFiles.splice(index, 1)
-          this.$swal(
-            'ทำการลบไฟล์!',
-            'ลบไฟล์สำเร็จแล้ว',
-            'success'
-          )
-        }
-      })
-    },
+        .then((result) => {
+          if (result.value) {
+            axios.delete(`${process.env.VUE_APP_FILE_SERVICE_URL}/delete/${item.id}`, {
+              headers: {
+                Authorization: localStorage.getItem('jwtToken')
+              }
+            })
+            this.subjectFiles.splice(index, 1)
+            this.$swal(
+              'ทำการลบไฟล์!',
+              'ลบไฟล์สำเร็จแล้ว',
+              'success'
+            )
+          }
+        })
+    }
   }
 }
 </script>

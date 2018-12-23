@@ -36,7 +36,17 @@
           <v-list-group>
             <v-list-tile slot="activator">
               <v-list-tile-action>
-                <v-icon>favorites</v-icon>
+                <notification-bell v-if="getTotalNotification != 0"
+                      :size="20"
+                      :count="getTotalNotification"
+                      upperLimit="5"
+                      counterLocation="upperRight"
+                      counterStyle="roundRectangle"
+                      counterBackgroundColor="#f44336"
+                      counterTextColor="#FFFFFF"
+                      iconColor="#ffffff"
+                />
+                <v-icon v-else>favorites</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>Favorites</v-list-tile-title>
@@ -44,12 +54,22 @@
             </v-list-tile>
 
             <v-list-tile
-            v-for="(favoriteSubject) in getFavorite"
+            v-for="favoriteSubject in getFavorite"
               :key="favoriteSubject.id"
               @click="page(`/subject/${favoriteSubject.subjectId}?subjectName=${favoriteSubject.subjectName}`)"
             >
                 <v-list-tile-action>
-                  <v-icon color="red">favorites</v-icon>
+                  <notification-bell v-if="favoriteSubject.isSomeThingUpdate == true"
+                      :size="20"
+                      :count="1"
+                      upperLimit="1"
+                      counterLocation="upperRight"
+                      counterStyle="roundRectangle"
+                      counterBackgroundColor="#f44336"
+                      counterTextColor="#FFFFFF"
+                      iconColor="#ffffff"
+                  />
+                  <v-icon color="red" v-else >favorites</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
                   <v-list-tile-title>
@@ -81,8 +101,6 @@
         >
           <v-text-field prepend-icon="search"  @keyup.enter="searchByCondition(facultyID)"
               placeholder="ลองหาวีดีโอดูสิ~" v-model="searchKeyword">
-
-            <div ></div>
           </v-text-field>
         </v-card-title>
       </v-card>
@@ -93,12 +111,13 @@
 <script>
 import axios from 'axios'
 import jwtDecode from 'jwt-decode'
+import NotificationBell from 'vue-notification-bell'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ToolBar',
   components: {
-
+    NotificationBell
   },
   mounted  () {
     this.loadUserDetail()
@@ -108,7 +127,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getFavorite'])
+    ...mapGetters(['getUser', 'getFavorite', 'getTotalNotification'])
   },
   data () {
     return {
@@ -124,7 +143,8 @@ export default {
         { title: 'All Videos', icon: 'videocam', page: '/' },
         { title: 'Subject', icon: 'school', page: '/' }
       ],
-      favoriteSubject: []
+      favoriteSubject: [],
+      totalNotification: 0
     }
   },
   methods: {

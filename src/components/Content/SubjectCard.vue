@@ -54,7 +54,7 @@ export default {
   },
   watch: {
     // ต้อง watch ไว้เพราะว่า async vuex ทำให้ค่ามันไปโหลดทีหลังเราเลยต้องเพิ่มอันนี้มาเพื่อบังคับโหลดค่า
-    getFavorite: function(){
+    getFavorite: function () {
       this.checkSubjectIsFavourited()
     }
   },
@@ -70,7 +70,7 @@ export default {
           console.log(subjectFavourites[i].id)
           this.favouriteId = subjectFavourites[i].id
           this.isFavouriteByUser = true
-          //console.log('Favourited by User : ' + this.subjectID)
+          // console.log('Favourited by User : ' + this.subjectID)
         }
       }
     },
