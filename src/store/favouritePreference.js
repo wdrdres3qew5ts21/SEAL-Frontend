@@ -1,7 +1,7 @@
 import axios from 'axios'
 export const favouritePreference = {
   state: {
-    favorite: [],
+    favorites: [],
     totalNotification: 0
   },
   actions: {
@@ -13,9 +13,15 @@ export const favouritePreference = {
     },
     deductNotification: function ({ commit }) {
       commit('deductNotification')
+    },
+    modifyFavorite: function ({ commit }, favorite) {
+      commit('modifyFavorite', favorite)
     }
   },
   mutations: {
+    modifyFavorite: function (state, favorite) {
+      state.favorites = favorite
+    },
     setFavorite: async function (state, favorites) {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       for (let i = 0; i < favorites.length; i++) {
@@ -30,10 +36,10 @@ export const favouritePreference = {
           state.totalNotification++
         }
       }
-      state.favorite = favorites
+      state.favorites = favorites
     },
     addFavoriteSubjectName: function (state, favorite) {
-      state.favorite.push({
+      state.favorites.push({
         ...favorite
       })
     },
@@ -43,7 +49,7 @@ export const favouritePreference = {
   },
   getters: {
     getFavorite: function (state) {
-      return state.favorite
+      return state.favorites
     },
     getTotalNotification: function (state) {
       return state.totalNotification

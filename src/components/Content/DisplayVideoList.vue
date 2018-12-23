@@ -91,10 +91,10 @@ export default {
     this.fetchAllVideoDetailForThisSubject()
   },
   computed: {
-    ...mapGetters(['getHeaderContent', 'getUser', 'getFavorite', 'getFavoriteBySubjectId'])
+    ...mapGetters(['getHeaderContent', 'getUser', 'getFavorite'])
   },
   methods: {
-    ...mapActions(['setHeaderContent']),
+    ...mapActions(['setHeaderContent', 'modifyFavorite', 'deductNotification']),
     fetchAllVideoDetailForThisSubject: function () {
       // ถ้าเกิดไม่กรอก subjectID ของหน้าวิชามาก็จะเตะไปวิชาที่ตั้งไว้คือ IT fund มี subjectID คือ 2
       this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
@@ -129,18 +129,31 @@ export default {
             break
           }
         }
-        if (myFavoriteId != null) {
+        this.userReadNotificationFromFavoriteSubject(myFavoriteId)
+      }
+      // console.log(this.$route.path)
+    },
+    userReadNotificationFromFavoriteSubject: function(userFavoriteId){
+      if (userFavoriteId != null) {
           // console.log('You had favourite this subject : '+ myFavoriteId)
           axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/user/${this.getUser.userId}/read/notification`, {
-            id: myFavoriteId
+            id: userFavoriteId
           }, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
             }
           })
         }
-      }
-      // console.log(this.$route.path)
+        // ทำการจัดการ Notification Toolbar ใหม่หลังจากจัดการกับ Backend สำเร็จแล้ว
+        let favoriteLists = this.getFavorite
+        for(let i=0; i< favoriteLists.length; i++){
+          if(favoriteLists[i].subjectId == this.subjectID){
+            favoriteLists[i].isSomeThingUpdate = false
+            this.modifyFavorite(favoriteLists)
+            this.deductNotification()
+            break
+          }
+        }
     },
     loadAllVideoCard: async function () {
       console.log('load all video card')
