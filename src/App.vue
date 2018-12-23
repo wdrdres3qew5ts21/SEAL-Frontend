@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <vue-snotify></vue-snotify>
     <ToolBar v-show="getIsShowToolBar" ref="toolBar"/>
     <router-view  @loadToolBarAfterLogin="loadToolBar()"></router-view>
     <v-footer color="black" app inset>
@@ -16,20 +17,31 @@ export default {
     ToolBar
   },
   mounted () {
+
   },
   data () {
     return {
     }
+  },
+  computed: {
+    ...mapGetters(['getIsShowToolBar', 'getFavorite'])
   },
   methods: {
     loadToolBar: function () {
       console.log('emit work!!!')
       this.$refs.toolBar.loadAllFaculties()
       this.$refs.toolBar.loadAllFavorite()
+      this.getFavorite
+    },
+    snotifyToUserBySubscribe: function(subjectText){
+      vm.$snotify.info('วิชา Cloud Native มีไฟล์ใหม่', `New Material !`, {
+        timeout: 7000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        titleMaxLength: 40,
+        bodyMaxLength: 60
+      })
     }
-  },
-  computed: {
-    ...mapGetters(['getIsShowToolBar'])
   }
 }
 </script>

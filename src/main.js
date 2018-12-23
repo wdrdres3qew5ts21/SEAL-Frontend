@@ -12,8 +12,8 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueSweetalert2 from 'vue-sweetalert2'
-
-Vue.use(VueSweetalert2);
+import Snotify, { SnotifyPosition } from 'vue-snotify'
+import 'vue-snotify/styles/material.css'
 
 (function (d, s, id) {
   var js
@@ -24,6 +24,14 @@ Vue.use(VueSweetalert2);
   fjs.parentNode.insertBefore(js, fjs)
 }(document, 'script', 'facebook-jssdk'))
 
+const options = {
+  toast: {
+    position: SnotifyPosition.rightBottom
+  }
+}
+
+Vue.use(Snotify, options)
+Vue.use(VueSweetalert2)
 Vue.use(BootstrapVue)
 Vue.use(Vuetify)
 Vue.config.productionTip = false
