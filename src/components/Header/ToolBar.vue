@@ -169,6 +169,7 @@ export default {
         this.$router.push('/login')
       })
       let favorites = favoriteDetail.data
+      console.log(favorites)
       this.setFavorite(favorites)
       for (let i = 0; i < favorites.length; i++) {
         this.findSubjectNameById(parseInt(favorites[i].subjectId))

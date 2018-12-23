@@ -20,8 +20,6 @@ export default {
     vue2Dropzone
   },
   mounted () {
-    console.log(process.env.VUE_APP_TEST)
-    console.log(process.env.lnwza)
   },
   data () {
     return {

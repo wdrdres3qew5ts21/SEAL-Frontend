@@ -77,7 +77,8 @@ export default {
         },
         params: {
           subjectId: parseInt(this.$route.params.subjectID)
-        }
+        },
+        favoriteId: null
       },
     }
   },
@@ -88,19 +89,42 @@ export default {
     console.log(this.getUser)
   },
   computed: {
-    ...mapGetters(['getHeaderContent', 'getUser'])
+    ...mapGetters(['getHeaderContent', 'getUser','getFavorite', 'getFavoriteBySubjectId'])
   },
   methods: {
     ...mapActions(['setHeaderContent']),
     reloadSubjectFileTable: function(file, response){
       this.$refs.subjectFileTable.loadAllSubjectFiles()
     },
-    loadSubjectTitle: function () {
+    loadSubjectTitle: async function () {
       if (this.$route.path == '/') {
         this.isHomePage = true
       } else {
+        // เข้ามาตรงนี้แสดงว่าไม่ใช่หน้า HomePage แต่เป็นหน้ารายวิชาของภาคตัวเอง
         console.log(this.$route.query.subjectName)
         this.setHeaderContent(this.$route.query.subjectName)
+        // เข้ามาที่ภาคตัวเองหลังจากเห็นไปแล้วว่าอยู่หน้าวิชาใดต่อไปก็คือการเซ็ท Notification ว่ามีอะไรใหม่เป็น False
+        // console.log(this.getFavoriteBySubjectId(this.$route.params.subjectID))
+        console.log(this.getFavorite)
+        let subjectIdOfPage = this.$route.params.subjectID
+        let favoriteLists = this.getFavorite
+        let myFavoriteId = null;
+        for (let i = 0; i < favoriteLists.length; i++) {
+          if (favoriteLists[i].subjectId === subjectIdOfPage) {
+            myFavoriteId = favoriteLists[i].id
+            break
+          }
+        }
+        if(myFavoriteId != null){
+          console.log('You had favourite this subject : '+ myFavoriteId)
+          axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/user/${this.getUser.userId}/read/notification`,{
+            id: myFavoriteId
+          },{
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+            }
+          })
+        }
       }
       console.log(this.$route.path)
     },
