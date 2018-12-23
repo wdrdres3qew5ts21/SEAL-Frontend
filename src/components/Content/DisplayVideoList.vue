@@ -8,7 +8,7 @@
           <div v-if="getUser.role =='teacher' ">
             <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" 
               @vdropzone-success="(file, response)=>reloadSubjectFileTable(file, response)"/>
-            <subject-file-table :subjectID="parseInt($route.params.subjectID)" ref="subjectFileTable"/>
+            <subject-file-table :subjectID="parseInt(this.$route.params.subjectID)" ref="subjectFileTable"/>
           </div>
         </v-flex>
       </v-layout>
@@ -82,17 +82,25 @@ export default {
       },
     }
   },
-  async mounted () {
-    this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
-    this.loadSubjectTitle()
-    this.loadAllVideoCard()
-    console.log(this.getUser)
+  watch: {
+    '$route.params.subjectID': function () {
+      this.fetchAllVideoDetailForThisSubject()
+    }
+  },
+  mounted () {
+    this.fetchAllVideoDetailForThisSubject()
   },
   computed: {
     ...mapGetters(['getHeaderContent', 'getUser','getFavorite', 'getFavoriteBySubjectId'])
   },
   methods: {
     ...mapActions(['setHeaderContent']),
+    fetchAllVideoDetailForThisSubject: function(){
+      // ถ้าเกิดไม่กรอก subjectID ของหน้าวิชามาก็จะเตะไปวิชาที่ตั้งไว้คือ IT fund มี subjectID คือ 2
+      this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
+      this.loadSubjectTitle()
+      this.loadAllVideoCard()
+    },
     reloadSubjectFileTable: function(file, response){
       this.$refs.subjectFileTable.loadAllSubjectFiles()
     },
@@ -116,7 +124,7 @@ export default {
           }
         }
         if(myFavoriteId != null){
-          console.log('You had favourite this subject : '+ myFavoriteId)
+          //console.log('You had favourite this subject : '+ myFavoriteId)
           axios.put(`${process.env.VUE_APP_USER_SERVICE_URL}/user/${this.getUser.userId}/read/notification`,{
             id: myFavoriteId
           },{
@@ -126,9 +134,10 @@ export default {
           })
         }
       }
-      console.log(this.$route.path)
+      //console.log(this.$route.path)
     },
     loadAllVideoCard: async function () {
+      console.log('load all video card')
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       let videoDetails = await axios.get(
         `${process.env.VUE_APP_VIDEO_SERVICE_URL}/subject/${this.subjectID}/videos`,
@@ -146,9 +155,7 @@ export default {
       videoDetails = videoDetails.data
       this.videoDetails = videoDetails
       this.dialog = false
-    },
-    fetchVideoById: function (videoId) {},
-    testLoad: function () {}
+    }
   }
 }
 </script>

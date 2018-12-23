@@ -54,8 +54,11 @@ export default {
     }
   },
   watch: {
-    dialog (val) {
+    dialog: function(val) {
       val || this.close()
+    },
+    subjectID: function(){
+      this.loadAllSubjectFiles()
     }
   },
   mounted () {
@@ -71,7 +74,6 @@ export default {
       return fileTimeStamp.toGMTString()
     },
     loadAllSubjectFiles: async function () {
-      console.log('load all subject files')
       let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files/subject/${this.subjectID}`,
         {
           headers: {
@@ -81,7 +83,6 @@ export default {
       )
       subjectFiles = subjectFiles.data
       this.subjectFiles = subjectFiles
-      console.log(subjectFiles)
     },
     deleteItem (item) {
       console.log('Delte Item : ')

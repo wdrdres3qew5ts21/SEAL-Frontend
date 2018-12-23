@@ -8,13 +8,11 @@ export const favouritePreference = {
       commit('setFavorite', favorite)
     },
     addFavoriteSubjectName: function ({ commit }, favorite) {
-      console.log('add push vuex')
       commit('addFavoriteSubjectName', favorite)
     }
   },
   mutations: {
     setFavorite: async function (state, favorites) {
-      console.log('vuex set favorite and get subject name')
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       for (let i = 0; i < favorites.length; i++) {
         let subject = await axios.get(
