@@ -71,22 +71,24 @@ export default {
     ...mapActions(['setFacultyID']),
     loadAllSubjectFromFaculty: async function () {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
-      let subjectDetails = await axios.get(
+      if(this.getFacultyID != 0){
+        let subjectDetails = await axios.get(
         `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/program/${this.getFacultyID}/subjects`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtTokenLocalStorage}`
+          {
+            headers: {
+              Authorization: `Bearer ${jwtTokenLocalStorage}`
+            }
           }
-        }
-      ).catch((response) => {
-        localStorage.removeItem('jwtToken')
-        this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
-        this.$router.push('/login')
-      })
-      subjectDetails = subjectDetails.data
-      //this.setFacultyID(this.facultyID)
-      this.subjectDetails = subjectDetails
-      this.dialog = false
+        ).catch((response) => {
+          localStorage.removeItem('jwtToken')
+          this.$swal('กรุณา login', 'หมดเวลาการใช้งาน', 'error')
+          this.$router.push('/login')
+        })
+        subjectDetails = subjectDetails.data
+        //this.setFacultyID(this.facultyID)
+        this.subjectDetails = subjectDetails
+        this.dialog = false
+      }
     }
   }
 }

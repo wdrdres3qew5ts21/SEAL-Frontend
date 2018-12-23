@@ -32,6 +32,19 @@
         </v-flex>
       </v-layout>
     </v-container>
+
+     <v-dialog v-model="dialog" hide-overlay persistent width="300">
+      <v-card color="black" dark>
+        <v-card-text>
+          Loading...
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -48,7 +61,8 @@ export default {
       alreadyLogin: false,
       authorized: false,
       username: '',
-      password: ''
+      password: '',
+      dialog: false
     }
   },
   computed: {
@@ -67,6 +81,7 @@ export default {
       }
     },
     loginAuthen: async function () {
+      this.dialog = true
       let id = this.username
       let password = this.password
       let userAuthentication = await axios.post(process.env.VUE_APP_USER_SERVICE_URL + '/user/login',
@@ -88,6 +103,7 @@ export default {
         this.$emit('loadToolBarAfterLogin')
         this.$router.push('/')
       }
+      this.dialog = false
     },
     logout: function () {
       localStorage.removeItem('jwtToken')
