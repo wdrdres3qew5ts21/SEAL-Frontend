@@ -3,7 +3,9 @@ import Vue from 'vue'
 export const favouritePreference = {
   state: {
     favorites: [],
-    totalNotification: 0
+    totalNotification: 0,
+    isVisitFirstTime: true,
+    vm: new Vue()
   },
   actions: {
     setFavorite: function ({ commit }, favorite) {
@@ -35,17 +37,19 @@ export const favouritePreference = {
           })
         favorites[i].subjectName = subject.data.subject_name
         if (favorites[i].isSomeThingUpdate === true) {
-          let vm = new Vue()
-          vm.$snotify.info(`วิชา ${favorites[i].subjectName} มีไฟล์ใหม่`, 'New Material !', {
-            timeout: 7000,
-            closeOnClick: true,
-            pauseOnHover: true,
-            titleMaxLength: 40,
-            bodyMaxLength: 60
-          })
           state.totalNotification++
+          if (state.isVisitFirstTime) {
+            state.vm.$snotify.info(`วิชา ${favorites[i].subjectName} มีไฟล์ใหม่`, 'New Material !', {
+              timeout: 7000,
+              closeOnClick: true,
+              pauseOnHover: true,
+              titleMaxLength: 40,
+              bodyMaxLength: 80
+            })
+          }
         }
       }
+      state.isVisitFirstTime = false
       state.favorites = favorites
     },
     addFavoriteSubjectName: function (state, favorite) {
