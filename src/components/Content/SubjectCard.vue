@@ -49,6 +49,15 @@ export default {
   mounted () {
     this.checkSubjectIsFavourited()
   },
+  computed: {
+    ...mapGetters(['getUser', 'getFavorite'])
+  },
+  watch: {
+    // ต้อง watch ไว้เพราะว่า async vuex ทำให้ค่ามันไปโหลดทีหลังเราเลยต้องเพิ่มอันนี้มาเพื่อบังคับโหลดค่า
+    getFavorite: function(){
+      this.checkSubjectIsFavourited()
+    }
+  },
   methods: {
     ...mapActions(['setHeaderContent', 'setFavorite']),
     checkSubjectIsFavourited: function () {
@@ -61,7 +70,7 @@ export default {
           console.log(subjectFavourites[i].id)
           this.favouriteId = subjectFavourites[i].id
           this.isFavouriteByUser = true
-          // console.log('Favourited by User : ' + this.subjectID)
+          //console.log('Favourited by User : ' + this.subjectID)
         }
       }
     },
@@ -99,9 +108,6 @@ export default {
           this.$router.push('/login')
         })
     }
-  },
-  computed: {
-    ...mapGetters(['getUser', 'getFavorite'])
   }
 }
 </script>
