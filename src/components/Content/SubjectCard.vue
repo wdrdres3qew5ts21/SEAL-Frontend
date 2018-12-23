@@ -76,6 +76,7 @@ export default {
     },
     loveFavorite: async function (subjectID) {
       console.log('love')
+      this.isFavouriteByUser = true
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       let love = await axios.post(process.env.VUE_APP_USER_SERVICE_URL + '/favorite/user/' + this.getUser.userId + '/subject',
         {
