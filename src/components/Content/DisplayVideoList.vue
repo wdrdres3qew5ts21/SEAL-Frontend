@@ -82,7 +82,7 @@ export default {
       },
     }
   },
-  mounted () {
+  async mounted () {
     this.subjectID = this.$route.params.subjectID === undefined ? 2 : this.$route.params.subjectID
     this.loadSubjectTitle()
     this.loadAllVideoCard()

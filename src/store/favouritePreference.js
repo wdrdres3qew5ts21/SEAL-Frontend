@@ -3,17 +3,20 @@ export const favouritePreference = {
     favoriteSubject: []
   },
   actions: {
-    setFavoriteSubject: function ({ commit }, favoriteSubject) {
-      commit('setfavoriteSubject', favoriteSubject)
+    addFavoriteSubject: function ({ commit }, favoriteSubject) {
+      console.log('add push vuex')
+      commit('addFavoriteSubject', favoriteSubject)
     }
   },
   mutations: {
-    setfavoriteSubject: function (state, favoriteSubject) {
-      state.favoriteSubject = favoriteSubject
+    addFavoriteSubject: function (state, favoriteSubject) {
+      state.favoriteSubject.push({
+        ...favoriteSubject
+      })
     }
   },
   getters: {
-    getfavoriteSubject: function (state) {
+    getFavoriteSubject: function (state) {
       return state.favoriteSubject
     }
   }

@@ -100,7 +100,7 @@ export default {
   components: {
 
   },
-  mounted () {
+  mounted  () {
     this.loadUserDetail()
     if (localStorage.getItem('jwtToken') != null) {
       this.loadAllFavorite()
@@ -108,7 +108,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getFavorite'])
+    ...mapGetters(['getUser', 'getFavorite', 'getFavoriteSubject'])
   },
   data () {
     return {
@@ -128,7 +128,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setFacultyID', 'setKeyword', 'setUser', 'setHeaderContent', 'setFavorite']),
+    ...mapActions(['setFacultyID', 'setKeyword', 'setUser', 'setHeaderContent', 'setFavorite', 'addFavoriteSubject']),
     ...mapGetters(['getFacultyID']),
     loadUserDetail: function () {
       let jwtToken = localStorage.getItem('jwtToken')
@@ -183,7 +183,12 @@ export default {
             'Authorization': `Bearer ${jwtTokenLocalStorage}`
           }
         })
+        //push ลง array ของเราเองเพื่อเก้บไว้แสดงที่ด้านขวา
       this.favoriteSubject.push(subject.data.subject_name)
+      this.addFavoriteSubject({
+        subjectId: subjectId,
+        subjectName: subject.data.subject_name
+      })
     },
     page (page) {
       this.$router.replace({ path: page })

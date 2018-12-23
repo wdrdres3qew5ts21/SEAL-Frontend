@@ -4,6 +4,7 @@ import { userDetailJWT } from './store/userDetailJWT'
 import { searchKeywordByFaculty } from './store/searchKeywordByFaculty'
 import { loginPreference } from './store/loginPreference'
 import { headerContentPreference } from './store/headerContentPreference'
+import { favouritePreference } from './store/favouritePreference'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -11,6 +12,7 @@ export default new Vuex.Store({
     loginPreference,
     userDetailJWT,
     searchKeywordByFaculty,
-    headerContentPreference
+    headerContentPreference,
+    favouritePreference
   }
 })
