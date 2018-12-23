@@ -44,16 +44,16 @@
             </v-list-tile>
 
             <v-list-tile
-            v-for="(item, index) in getFavorite"
-              :key="item.id"
-              @click="page(`/subject/${item.subjectId}?subjectName=${favoriteSubject[index]}`)"
+            v-for="(favoriteSubject) in getFavorite"
+              :key="favoriteSubject.id"
+              @click="page(`/subject/${favoriteSubject.subjectId}?subjectName=${favoriteSubject.subjectName}`)"
             >
                 <v-list-tile-action>
                   <v-icon color="red">favorites</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
                   <v-list-tile-title>
-                    {{favoriteSubject[index]}}
+                    {{favoriteSubject.subjectName}}
                   </v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
@@ -108,7 +108,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUser', 'getFavorite', 'getFavorite'])
+    ...mapGetters(['getUser', 'getFavorite'])
   },
   data () {
     return {
