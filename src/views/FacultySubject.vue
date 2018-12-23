@@ -46,12 +46,11 @@ export default {
     return {
       isShowMenu: false,
       subjectDetails: [],
-      facultyID: 1,
       dialog: false
     }
   },
   computed: {
-    ...mapGetters(['getHeaderContent'])
+    ...mapGetters(['getHeaderContent', 'getFacultyID'])
   },
   mounted () {
     this.dialog = true
@@ -64,7 +63,7 @@ export default {
   watch: {
     '$route.params.facultyID': function (facultyID) {
       this.dialog = true
-      this.facultyID = facultyID
+      //this.facultyID = facultyID
       this.loadAllSubjectFromFaculty()
     }
   },
@@ -73,7 +72,7 @@ export default {
     loadAllSubjectFromFaculty: async function () {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       let subjectDetails = await axios.get(
-        `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/program/${this.facultyID}/subjects`,
+        `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/program/${this.getFacultyID}/subjects`,
         {
           headers: {
             Authorization: `Bearer ${jwtTokenLocalStorage}`
@@ -85,7 +84,7 @@ export default {
         this.$router.push('/login')
       })
       subjectDetails = subjectDetails.data
-      this.setFacultyID(this.facultyID)
+      //this.setFacultyID(this.facultyID)
       this.subjectDetails = subjectDetails
       this.dialog = false
     }

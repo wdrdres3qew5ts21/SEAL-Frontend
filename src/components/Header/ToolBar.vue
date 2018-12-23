@@ -174,6 +174,7 @@ export default {
       })
       faculties = faculties.data
       this.faculties = faculties
+      console.log(this.faculties)
     },
     loadAllFavorite: async function () {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
@@ -196,6 +197,7 @@ export default {
       this.$router.replace({ path: page })
     },
     pageFaculty (program_id) {
+      //console.log(program_id)
       this.$router.replace({ path: '/faculty/' + program_id })
       this.setFacultyID(program_id)
     },
