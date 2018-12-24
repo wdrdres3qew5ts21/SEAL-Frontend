@@ -5,11 +5,9 @@
       <v-layout v-if="isHomePage == false" row wrap flexbox>
         <v-flex>
           <h1 class="title-subject" >{{getHeaderContent}}</h1>
-          <div v-if="getUser.role =='teacher' ">
-            <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
+          <vue-dropzone v-if="getUser.role =='teacher' " ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"
               @vdropzone-success="(file, response)=>reloadSubjectFileTable(file, response)"/>
-            <subject-file-table :subjectID="parseInt(this.$route.params.subjectID)" ref="subjectFileTable"/>
-          </div>
+          <subject-file-table :subjectID="parseInt(this.$route.params.subjectID)" ref="subjectFileTable"/>
         </v-flex>
       </v-layout>
       <v-layout row wrap align-end flexbox>
