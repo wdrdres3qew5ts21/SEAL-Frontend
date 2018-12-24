@@ -74,8 +74,7 @@ export default {
       return fileTimeStamp.toGMTString()
     },
     loadAllSubjectFiles: async function () {
-      console.log(this.subjectID)
-      if(isNaN(this.subjectID)){
+      if(isNaN(this.subjectID) == false){
       let subjectFiles = await axios.get(`${process.env.VUE_APP_FILE_SERVICE_URL}/files/subject/${this.subjectID}`,
           {
             headers: {

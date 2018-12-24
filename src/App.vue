@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     loadToolBar: function () {
-      console.log('emit work!!!')
+      // console.log('emit work!!!')
       this.$refs.toolBar.loadAllFaculties()
       this.$refs.toolBar.loadAllFavorite()
       this.getFavorite

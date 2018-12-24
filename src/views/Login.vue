@@ -89,9 +89,12 @@ export default {
           id,
           password
         }
-      ).catch((error) => {
+      )
+      .catch((error) => {
         this.$swal('กรุณา login ใหม่', error.response.data.message, 'error')
+        this.dialog = false
       })
+      
       userAuthentication = userAuthentication.data
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
       if (userAuthentication != null) {

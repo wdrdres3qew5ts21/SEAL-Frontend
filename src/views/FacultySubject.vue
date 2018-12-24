@@ -57,6 +57,7 @@ export default {
     if (localStorage.getItem('jwtToken') == null) {
       this.$router.push({ path: '/login' })
     } else {
+      console.log('load ')
       this.loadAllSubjectFromFaculty()
     }
   },
@@ -71,9 +72,10 @@ export default {
     ...mapActions(['setFacultyID']),
     loadAllSubjectFromFaculty: async function () {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
-      if(this.getFacultyID != 0){
+      //console.log(this.$route.name == 'faculty')
+      if(this.$route.name == 'faculty'){
         let subjectDetails = await axios.get(
-        `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/program/${this.getFacultyID}/subjects`,
+        `${process.env.VUE_APP_PROGRAM_SERVICE_URL}/program/${this.$route.params.facultyID}/subjects`,
           {
             headers: {
               Authorization: `Bearer ${jwtTokenLocalStorage}`

@@ -174,7 +174,7 @@ export default {
       })
       faculties = faculties.data
       this.faculties = faculties
-      console.log(this.faculties)
+      //console.log(this.faculties)
     },
     loadAllFavorite: async function () {
       let jwtTokenLocalStorage = localStorage.getItem('jwtToken')
@@ -190,7 +190,7 @@ export default {
         this.$router.push('/login')
       })
       let favorites = favoriteDetail.data
-      console.log(favorites)
+      //console.log(favorites)
       this.setFavorite(favorites)
     },
     page (page) {
