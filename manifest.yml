@@ -4,7 +4,5 @@ applications:
   memory:  256M
   path: dist/
   buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git
-  env:
-    lnwza: linjingyun12
-    VUE_APP_TEST: EvanYou
+ 
     
